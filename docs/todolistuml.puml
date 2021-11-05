@@ -1,0 +1,109 @@
+@startuml
+
+class ToDoListApplication {
+    'methods
+    +main(String[]) {static}
+    +start(Stage)
+}
+
+class ApplicationController {
+    'attributes
+    -masterList: ToDoList
+    -visibleList: List<Item>
+    -addItemButton: Button
+    -allListTable: TableView<ToDoList>
+    -titleCol: TableColumn<ToDoList, String>
+    -itemNumCol: TableColumn<ToDoList, Integer>
+    -incompleteItemCol: TableColumn<ToDoList, Integer>
+    -changeTitleButton: Button
+    -completeCheckbox: CheckBox
+    -createListButton: Button
+    -currentListTable: TableView<ToDoList>
+    -descriptionCol: TableColumn<Item, String>
+    -dueDateCol: TableColumn<Item, String>
+    -completionCol: TableColumn<Item, Boolean>
+    -dateEntryBox: DatePicker
+    -deleteItemButton: Button
+    -deleteListButton: Button
+    -descriptionEntryBox: TextArea
+    -displayAllItemsButton: Button
+    -displayCompleteButton: Button
+    -displayIncompleteButton: Button
+    -editItemButton: Button
+    -loadListFromFileButton: Button
+    -saveListToFileButton: Button
+    -titleEntryBox: TextField
+    -clearListButton: Button
+    -downloadListButton: Button
+    -editDateBox: DatePicker
+    -editDescriptionBox: TextArea
+    -newDateBox: DatePicker
+    -newDescriptionBox: TextArea
+    -uploadListButton: Button
+    'methods
+    -onAddItemPressed(ActionEvent)
+    -onDeleteItemPressed(ActionEvent)
+    -onDisplayAllPressed(ActionEvent)
+    -onDisplayCompletePressed(ActionEvent)
+    -onDisplayIncompletePressed(ActionEvent)
+    -onEditItemPressed(ActionEvent)
+    -onClearListPressed(ActionEvent)
+    -onDownloadListPressed(ActionEvent)
+    -onUploadListPressed(ActionEvent)
+    +initialize()
+}
+
+class Item {
+    'attributes
+    -description: String
+    -dueDate: LocalDate
+    -isComplete: boolean
+    'methods
+    +Item(String, LocalDate):
+    +Item(String):
+    +setComplete(boolean)
+    +isComplete(): boolean
+    +setDescription(String)
+    +getDescription(): String
+    +setDueDate(LocalDate)
+    +getDueDate(): LocalDate
+    +toString(): String
+}
+
+class ToDoList {
+    'attributes
+    -thingsToDo: List<Item>
+    'methods
+    +ToDoList()
+    +getThingsToDo(): List<Item>
+    +addToList(String, LocalDate)
+    +addToList(String)
+    +getCompleteThingsToDo(): List<Item>
+    +getIncompleteThingsToDo(): List<Item>
+    +editItem(Item, String, LocalDate, boolean)
+    +deleteItem(Item)
+    +clearList()
+    +loadListFromFile(File)
+    +saveListToFile(File)
+    +toString(): String
+}
+
+class ToDoListFileConverter {
+    'methods
+    +loadListFromFile(File): ToDoList
+    +saveListToFile(String, File)
+}
+
+class ItemValidator {
+    'methods
+    +validateDescriptionLength(String): boolean
+    +validateDate(String): boolean
+}
+
+ToDoListApplication -- ApplicationController
+ApplicationController -- ToDoList
+ToDoList --o ToDoListFileConverter
+ToDoList -- Item
+Item --o ItemValidator
+ToDoList --o ItemValidator
+@enduml
