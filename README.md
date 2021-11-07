@@ -81,5 +81,5 @@ can select and open a previous list. This will overwrite your current list!
 
 ## Credits
 
-Upload and downlaod icons made by https://www.flaticon.com/authors/uniconlabs from 
+Upload and download icons made by https://www.flaticon.com/authors/uniconlabs from 
 https://www.flaticon.com.
