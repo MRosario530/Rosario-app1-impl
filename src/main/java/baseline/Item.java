@@ -3,66 +3,81 @@
  *  Copyright 2021 Miguel Rosario
  */
 package baseline;
-
-import java.time.LocalDate;
+import javafx.beans.property.SimpleStringProperty;
 
 public class Item {
-    private String description;
-    private LocalDate dueDate;
-    private boolean isComplete;
 
-    public Item(String description, LocalDate dueDate) {
+    // Instance Variables
+    private final SimpleStringProperty description;
+    private final SimpleStringProperty dueDate;
+    private final SimpleStringProperty isComplete;
+    private static final String INC = "Incomplete";
+
+    // Constructors.
+    public Item(String description, String dueDate, String isComplete) {
         // Initialize an item object and assign the parameters to the corresponding variables.
+        this.description = new SimpleStringProperty(description);
+        this.dueDate = new SimpleStringProperty(dueDate);
+        this.isComplete = new SimpleStringProperty(isComplete);
+    }
+
+    public Item(String description, String dueDate) {
+        // Initialize an item object and assign the parameters to the corresponding variables.
+        this.description = new SimpleStringProperty(description);
+        this.dueDate = new SimpleStringProperty(dueDate);
+        // Set the isComplete variable to Incomplete by default.
+        this.isComplete = new SimpleStringProperty(INC);
     }
 
     public Item(String description) {
         // Initialize an item object and assign the parameters to the corresponding variables.
+        this.description = new SimpleStringProperty(description);
+        // Set the dueDate to "".
+        this.dueDate = new SimpleStringProperty("");
         // Set the isComplete variable to false by default.
-        // Set the dueDate to NULL.
+        this.isComplete = new SimpleStringProperty(INC);
     }
 
-    public Item() {
-        // Initialize an item object.
-        // Set the description to "".
-        // Set the isComplete variable to false by default.
-        // Set the dueDate to NULL.
+    // Setters and Getters.
+    public void setIsComplete(boolean isComplete) {
+        // Sets the boolean isComplete to the proper string depending on the boolean given.
+        if (isComplete) {
+            this.isComplete.set("Complete");
+        } else {
+            this.isComplete.set(INC);
+        }
     }
 
-    public void setComplete(boolean complete) {
-        // Sets the boolean isComplete to complete.
-    }
-
-    public boolean isComplete() {
+    public String getIsComplete() {
         // Return whether the item is complete.
-        return false;
+        return isComplete.get();
     }
 
     public void setDescription(String description) {
-        // Create an ItemValidator and validate the description string.
-        // If true:
-            // Sets the item's description.
+        // Sets the item's description.
+        this.description.set(description);
     }
 
     public String getDescription() {
         // Return the item's description.
-        return "";
+        return this.description.get();
     }
 
-    public void setDueDate(LocalDate dueDate) {
-        // Create an ItemValidator and validate the dueDate string.
-        // If true:
-            // Sets the item's dueDate.
+    public void setDueDate(String dueDate) {
+        // Set the item's due date.
+        this.dueDate.set(dueDate);
     }
 
-    public LocalDate getDueDate() {
+    public String getDueDate() {
         // Returns the item's due date.
-        return null;
+        return this.dueDate.get();
     }
 
+    // ToString.
     public String toString() {
         // Return a string containing the info as following:
-        // description + "," + dueDate toString + "," + isComplete
-        return "";
+        // description + "," + dueDate + "," + isComplete
+        return description.get() + "," + dueDate.get() + "," + isComplete.get();
     }
 
 }

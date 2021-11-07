@@ -4,44 +4,31 @@
  */
 package baseline;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class ApplicationController {
+public class ApplicationController implements Initializable {
 
     private ToDoList masterList;
 
     private List<Item> visibleList;
 
-    @FXML
-    private Button addItemButton;
+    private int currentView = 0;
 
     @FXML
-    private TableView<ToDoList> allListTable;
-
-    @FXML
-    private TableColumn<ToDoList, String> titleCol;
-
-    @FXML
-    private TableColumn<ToDoList, Integer> itemNumCol;
-
-    @FXML
-    private TableColumn<ToDoList, Integer> incompleteItemCol;
-
-    @FXML
-    private Button changeTitleButton;
-
-    @FXML
-    private CheckBox completeCheckbox;
-
-    @FXML
-    private Button createListButton;
-
-    @FXML
-    private TableView<ToDoList> currentListTable;
+    private TableView<Item> listTable;
 
     @FXML
     private TableColumn<Item, String> descriptionCol;
@@ -50,131 +37,185 @@ public class ApplicationController {
     private TableColumn<Item, String> dueDateCol;
 
     @FXML
-    private TableColumn<Item, Boolean> completionCol;
-
-    @FXML
-    private DatePicker dateEntryBox;
-
-    @FXML
-    private Button deleteItemButton;
-
-    @FXML
-    private Button deleteListButton;
-
-    @FXML
-    private TextArea descriptionEntryBox;
-
-    @FXML
-    private Button displayAllItemsButton;
-
-    @FXML
-    private Button displayCompleteButton;
-
-    @FXML
-    private Button displayIncompleteButton;
-
-    @FXML
-    private Button editItemButton;
-
-    @FXML
-    private Button loadListFromFileButton;
-
-    @FXML
-    private Button saveListToFileButton;
-
-    @FXML
-    private TextField titleEntryBox;
-
-    @FXML
-    private Button clearListButton;
-
-    @FXML
-    private Button downloadListButton;
-
-    @FXML
-    private DatePicker editDateBox;
-
-    @FXML
-    private TextArea editDescriptionBox;
-
-    @FXML
-    private DatePicker newDateBox;
+    private TableColumn<Item, String> completionCol;
 
     @FXML
     private TextArea newDescriptionBox;
 
     @FXML
-    private Button uploadListButton;
+    private DatePicker newDateBox;
+
+    @FXML
+    private Label inputErrorLabel;
+
+    @FXML
+    private TextArea editDescriptionBox;
+
+    @FXML
+    private DatePicker editDateBox;
+
+    @FXML
+    private CheckBox completeCheckbox;
+
+    @FXML
+    private Label addItemCountLabel;
+
+    @FXML
+    private Label editItemCountLabel;
 
     @FXML
     private void onAddItemPressed(ActionEvent event) {
-        // Get the data from the newDescriptionBox.
-        // Get the data from the newDate date picker.
-        // Call the masterList's addToList function with the appropriate values given.
-        // Add the item to the visibleList as well.
-        // Refresh the tableview.
+        int listSizeBeforeAdd = masterList.getThingsToDo().size();
+        masterList.addToList(newDescriptionBox.getText(),newDateBox.getValue());
+        // Validate the description before attempting to make an item.
+        if (listSizeBeforeAdd != masterList.getThingsToDo().size()) {
+            newDateBox.setValue(null);
+            newDescriptionBox.setText("");
+            inputErrorLabel.setVisible(false);
+        } else {
+            inputErrorLabel.setVisible(true);
+        }
+        updateTable();
     }
 
     @FXML
     private void onDeleteItemPressed(ActionEvent event) {
         // Get the currently selected item from the currentLists tableview.
+        Item itemToDel = listTable.getSelectionModel().getSelectedItem();
         // Call the masterList's deleteItem function on the item.
-        // Remove the item from the visibleList as well.
-    }
-
-
-    @FXML
-    private void onDisplayAllPressed(ActionEvent event) {
-        // Call the masterList's getThingsToDo function and set the visibleList equal to the result.
-        // Refresh the tableView to display all items.
-    }
-
-    @FXML
-    private void onDisplayCompletePressed(ActionEvent event) {
-        // Call the masterList's getCompleteThingsToDo function and set the visibleList equal to the result.
-        // Refresh the tableView to display all items.
-    }
-
-    @FXML
-    private void onDisplayIncompletePressed(ActionEvent event) {
-        // Call the masterList's getIncompleteThingsToDo function and set the visibleList equal to the result.
-        // Refresh the tableView to display all items.
+        masterList.deleteItem(itemToDel);
+        // Update the table.
+        listTable.setItems(FXCollections.observableArrayList(visibleList));
+        if (masterList.getThingsToDo().isEmpty()) {
+            currentView = 0;
+        }
+        updateTable();
     }
 
     @FXML
     private void onEditItemPressed(ActionEvent event) {
-        // Get the data from the descriptionEntry text area.
-        // Get the data from the dueDate date picker.
-        // Get the data from the completion check box.
         // Get the currently selected item from the tableview.
+        Item itemToChange = listTable.getSelectionModel().getSelectedItem();
         // Call the masterList's editItem function.
+        masterList.editItem(itemToChange, editDescriptionBox.getText(), editDateBox.getValue(),
+                completeCheckbox.isSelected());
+        // Reset values for the boxes.
+        editDateBox.setValue(null);
+        editDescriptionBox.setText("");
+        completeCheckbox.setSelected(false);
         // Update the visibleList and tableview.
+        updateTable();
     }
 
     @FXML
     private void onClearListPressed(ActionEvent event) {
         // Call the masterList's clearList method.
-        // Call the visibleList's clear method and update the tableView.
+        masterList.clearList();
+        visibleList.clear();
+        // Update the tableview.
+        currentView = 0;
+        updateTable();
+    }
+
+    @FXML
+    private void onDisplayAllPressed(ActionEvent event) {
+        // Call the masterList's getThingsToDo function and set the visibleList equal to the result.
+        visibleList = masterList.getThingsToDo();
+        // Refresh the tableview to display all items.
+        currentView = 0;
+        updateTable();
+    }
+
+    @FXML
+    private void onDisplayCompletePressed(ActionEvent event) {
+        // Call the masterList's getCompleteThingsToDo function and set the visibleList equal to the result.
+        visibleList = masterList.getCompleteThingsToDo();
+        // Refresh the tableview to display complete items.
+        currentView = 2;
+        updateTable();
+    }
+
+    @FXML
+    private void onDisplayIncompletePressed(ActionEvent event) {
+        // Call the masterList's getIncompleteThingsToDo function and set the visibleList equal to the result.
+        visibleList = masterList.getIncompleteThingsToDo();
+        // Refresh the tableview to display incomplete items.
+        currentView = 1;
+        updateTable();
     }
 
     @FXML
     private void onDownloadListPressed(ActionEvent event) {
-        // Create a filechooser and open the dialog window for it to get the file location.
+        // Create a filechooser object.
+        FileChooser fileChooser = new FileChooser();
+        String currentDir = System.getProperty("user.home");
+        fileChooser.setInitialDirectory(new File(currentDir));
         // Set an extension filter for only .txt files.
+        FileChooser.ExtensionFilter textFiles = new FileChooser.ExtensionFilter("Text files (*.txt)",
+                "*.txt");
+        fileChooser.getExtensionFilters().add(textFiles);
+        // Open the dialog window for it to get the new file location.
+        File downloadFile = fileChooser.showSaveDialog(completeCheckbox.getScene().getWindow());
         // Get the file location and call the masterList's saveListToFile method.
+        masterList.saveListToFile(downloadFile);
     }
 
     @FXML
     private void onUploadListPressed(ActionEvent event) {
         // Create a filechooser and open the dialog window for it to get the file location.
+        FileChooser fileChooser = new FileChooser();
         // Set an extension filter for only .txt files.
+        FileChooser.ExtensionFilter textFiles = new FileChooser.ExtensionFilter("Text files (*.txt)",
+                "*.txt");
+        fileChooser.getExtensionFilters().add(textFiles);
         // Get the file location and call the masterList's loadListFromFile method.
+        File uploadFile = fileChooser.showOpenDialog(completeCheckbox.getScene().getWindow());
+        masterList.loadListFromFile(uploadFile);
         // Update the visibleList and tableView.
+        updateTable();
+    }
+
+    // Helper Method to update the table immediately while not having to switch back to the complete display.
+    private void updateTable() {
+        if (currentView == 0) {
+            visibleList = masterList.getThingsToDo();
+        } else if(currentView == 1) {
+            visibleList = masterList.getIncompleteThingsToDo();
+        } else {
+            visibleList = masterList.getCompleteThingsToDo();
+        }
+        listTable.setItems(FXCollections.observableArrayList(visibleList));
+        listTable.refresh();
     }
 
     @FXML
-    public void initialize() {
-        // To be honest I don't really know what this does I just assumed I needed an initialize method.
-        // Initialize the masterList.
+    public void initialize(URL url, ResourceBundle rb) {
+        // Initialize the masterList and visibleList.
+        masterList = new ToDoList();
+        visibleList = new ArrayList<>();
+        // Initialize the columns.
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        // Allows resizing of the description column.
+        descriptionCol.setCellFactory(tc -> {
+            TableCell<Item, String> cell = new TableCell<>();
+            Text text = new Text();
+            cell.setGraphic(text);
+            cell.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            text.wrappingWidthProperty().bind(descriptionCol.widthProperty());
+            text.textProperty().bind(cell.itemProperty());
+            return cell ;
+        });
+        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        completionCol.setCellValueFactory(new PropertyValueFactory<>("isComplete"));
+
+        // Create character counters for description boxes.
+        addItemCountLabel.textProperty().bind(newDescriptionBox.textProperty()
+                .length()
+                .asString("Character Count: %d"));
+        editItemCountLabel.textProperty().bind(editDescriptionBox.textProperty()
+                .length()
+                .asString("Character Count: %d"));
+        // Update the tableview.
+        listTable.setItems(FXCollections.observableArrayList(visibleList));
     }
 }

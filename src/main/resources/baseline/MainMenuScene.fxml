@@ -13,94 +13,109 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="789.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ApplicationController">
-   <TableView fx:id="currentListTable" layoutX="340.0" layoutY="139.0" prefHeight="436.0" prefWidth="600.0">
+<AnchorPane prefHeight="789.0" prefWidth="1280.0" style="-fx-background-color: ece9d8;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ApplicationController">
+   <TableView fx:id="listTable" layoutX="340.0" layoutY="139.0" prefHeight="436.0" prefWidth="600.0">
       <columns>
-         <TableColumn prefWidth="200.0" text="Description" />
-         <TableColumn minWidth="0.0" prefWidth="200.0" text="Due Date" />
-         <TableColumn prefWidth="200.0" text="Completion Status" />
+         <TableColumn fx:id="descriptionCol" maxWidth="200.0" prefWidth="200.0" text="Description" />
+         <TableColumn fx:id="dueDateCol" maxWidth="200.0" prefWidth="200.0" text="Due Date" />
+         <TableColumn fx:id="completionCol" maxWidth="200.0" prefWidth="200.0" text="Completion Status" />
       </columns>
    </TableView>
-   <Label layoutX="596.0" layoutY="70.0" text="To Do List" textAlignment="CENTER">
+   <Label layoutX="548.0" layoutY="63.0" text="To Do List" textAlignment="CENTER">
       <font>
-         <Font size="20.0" />
+         <Font size="42.0" />
       </font>
    </Label>
    <ButtonBar layoutX="429.0" layoutY="604.0" prefHeight="40.0" prefWidth="422.0">
       <buttons>
-         <Button fx:id="displayAllItemsButton" mnemonicParsing="false" onAction="#onDisplayAllPressed" text="Display All " />
-         <Button fx:id="displayCompleteButton" mnemonicParsing="false" onAction="#onDisplayCompletePressed" text="Display Complete" />
-         <Button fx:id="displayIncompleteButton" mnemonicParsing="false" onAction="#onDisplayIncompletePressed" text="Display Incomplete" />
+         <Button mnemonicParsing="false" onAction="#onDisplayAllPressed" text="Display All " />
+         <Button mnemonicParsing="false" onAction="#onDisplayCompletePressed" text="Display Complete" />
+         <Button mnemonicParsing="false" onAction="#onDisplayIncompletePressed" text="Display Incomplete" />
       </buttons>
       <padding>
          <Insets right="25.0" />
       </padding>
    </ButtonBar>
-   <VBox prefHeight="800.0" prefWidth="186.0" spacing="30.0" style="-fx-background-color: #C0C6C9;">
+   <VBox prefHeight="800.0" prefWidth="248.0" spacing="30.0" style="-fx-background-color: #d8e4ec;">
       <Label alignment="CENTER" prefHeight="43.0" prefWidth="170.0" text="Add New Item">
          <font>
             <Font size="20.0" />
          </font>
          <VBox.margin>
-            <Insets left="8.0" top="20.0" />
+            <Insets bottom="-10.0" left="35.0" top="120.0" />
          </VBox.margin>
       </Label>
-      <TextArea fx:id="newDescriptionBox" prefHeight="99.0" prefWidth="131.0" promptText="Enter Item Description">
+      <TextArea fx:id="newDescriptionBox" prefHeight="192.0" prefWidth="146.0" promptText="Enter an item description between 1 and 256 characters" wrapText="true">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
          </VBox.margin>
       </TextArea>
-      <DatePicker fx:id="newDateBox" prefHeight="25.0" prefWidth="161.0" promptText="Enter Item Due Date">
+      <Label fx:id="addItemCountLabel" prefHeight="29.0" prefWidth="167.0">
          <VBox.margin>
-            <Insets left="10.0" right="20.0" />
+            <Insets left="20.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <DatePicker fx:id="newDateBox" editable="false" prefHeight="25.0" prefWidth="230.0" promptText="Select Using Calendar">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
          </VBox.margin>
       </DatePicker>
-      <Button fx:id="addItemButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAddItemPressed" text="Add Item to List">
+      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAddItemPressed" text="Add Item to List">
          <VBox.margin>
-            <Insets left="20.0" />
+            <Insets left="70.0" />
          </VBox.margin>
       </Button>
+      <Label fx:id="inputErrorLabel" text="Error - Please ensure your description is between 1 and 256 characters long!" textAlignment="CENTER" textFill="#eb0505" underline="true" visible="false" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
    </VBox>
-   <VBox layoutX="1094.0" prefHeight="800.0" prefWidth="186.0" spacing="30.0" style="-fx-background-color: #C0C6C9;">
+   <VBox layoutX="1032.0" prefHeight="800.0" prefWidth="248.0" spacing="30.0" style="-fx-background-color: #d8e4ec;">
       <Label alignment="CENTER" prefHeight="43.0" prefWidth="173.0" text="Edit Current Item">
          <font>
             <Font size="20.0" />
          </font>
          <VBox.margin>
-            <Insets left="8.0" top="20.0" />
+            <Insets bottom="-10.0" left="35.0" top="120.0" />
          </VBox.margin>
       </Label>
-      <TextArea fx:id="editDescriptionBox" prefHeight="99.0" prefWidth="186.0" promptText="Update Description">
+      <TextArea fx:id="editDescriptionBox" prefHeight="192.0" prefWidth="146.0" promptText="Enter updated description, invalid inputs will not be updated" wrapText="true">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
          </VBox.margin>
       </TextArea>
-      <DatePicker fx:id="editDateBox" prefHeight="25.0" prefWidth="161.0" promptText="Update Due Date">
+      <Label fx:id="editItemCountLabel" prefHeight="29.0" prefWidth="167.0">
          <VBox.margin>
-            <Insets left="20.0" right="10.0" />
+            <Insets left="20.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <DatePicker fx:id="editDateBox" editable="false" prefHeight="25.0" prefWidth="230.0" promptText="Select Using Calendar">
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
          </VBox.margin>
       </DatePicker>
-      <CheckBox fx:id="completeCheckbox" mnemonicParsing="false" text="Complete?">
+      <CheckBox fx:id="completeCheckbox" mnemonicParsing="false" prefHeight="27.0" prefWidth="85.0" text="Complete?">
          <VBox.margin>
-            <Insets left="20.0" />
+            <Insets left="80.0" />
          </VBox.margin>
       </CheckBox>
-      <Button fx:id="editItemButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onEditItemPressed" text="Edit Selected Item">
+      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onEditItemPressed" text="Edit Selected Item">
          <VBox.margin>
-            <Insets left="20.0" />
+            <Insets left="70.0" />
          </VBox.margin>
       </Button>
-      <Button fx:id="deleteItemButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onDeleteItemPressed" text="Delete Selected Item">
+      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onDeleteItemPressed" text="Delete Selected Item">
          <VBox.margin>
-            <Insets left="20.0" />
+            <Insets left="63.0" />
          </VBox.margin>
       </Button>
    </VBox>
    <ButtonBar layoutX="403.0" layoutY="683.0" prefHeight="40.0" prefWidth="475.0">
       <buttons>
-         <Button fx:id="uploadListButton" mnemonicParsing="false" onAction="#onUploadListPressed" text="Upload New List" />
-         <Button fx:id="clearListButton" mnemonicParsing="false" onAction="#onClearListPressed" text="Clear List" />
-         <Button fx:id="downloadListButton" mnemonicParsing="false" onAction="#onDownloadListPressed" text="Download Current List" />
+         <Button mnemonicParsing="false" onAction="#onUploadListPressed" text="Upload New List" />
+         <Button mnemonicParsing="false" onAction="#onClearListPressed" text="Clear List" />
+         <Button mnemonicParsing="false" onAction="#onDownloadListPressed" text="Download Current List" />
       </buttons>
       <padding>
          <Insets right="25.0" />

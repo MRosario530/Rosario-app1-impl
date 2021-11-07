@@ -10,36 +10,17 @@ class ApplicationController {
     'attributes
     -masterList: ToDoList
     -visibleList: List<Item>
-    -addItemButton: Button
-    -allListTable: TableView<ToDoList>
-    -titleCol: TableColumn<ToDoList, String>
-    -itemNumCol: TableColumn<ToDoList, Integer>
-    -incompleteItemCol: TableColumn<ToDoList, Integer>
-    -changeTitleButton: Button
-    -completeCheckbox: CheckBox
-    -createListButton: Button
-    -currentListTable: TableView<ToDoList>
+    -currentView: int
+    -listTable: TableView<Item>
     -descriptionCol: TableColumn<Item, String>
     -dueDateCol: TableColumn<Item, String>
-    -completionCol: TableColumn<Item, Boolean>
-    -dateEntryBox: DatePicker
-    -deleteItemButton: Button
-    -deleteListButton: Button
-    -descriptionEntryBox: TextArea
-    -displayAllItemsButton: Button
-    -displayCompleteButton: Button
-    -displayIncompleteButton: Button
-    -editItemButton: Button
-    -loadListFromFileButton: Button
-    -saveListToFileButton: Button
-    -titleEntryBox: TextField
-    -clearListButton: Button
-    -downloadListButton: Button
-    -editDateBox: DatePicker
-    -editDescriptionBox: TextArea
-    -newDateBox: DatePicker
+    -completionCol: TableColumn<Item, String>
     -newDescriptionBox: TextArea
-    -uploadListButton: Button
+    -newDateBox: DatePicker
+    -inputErrorLabel: Label
+    -editDescriptionBox: TextArea
+    -editDateBox: DatePicker
+    -completeCheckbox: CheckBox
     'methods
     -onAddItemPressed(ActionEvent)
     -onDeleteItemPressed(ActionEvent)
@@ -50,23 +31,26 @@ class ApplicationController {
     -onClearListPressed(ActionEvent)
     -onDownloadListPressed(ActionEvent)
     -onUploadListPressed(ActionEvent)
-    +initialize()
+    -updateTable()
+    +initialize(URL, ResourceBundle)
 }
 
 class Item {
     'attributes
-    -description: String
-    -dueDate: LocalDate
-    -isComplete: boolean
+    -final description: SimpleStringProperty
+    -final dueDate: SimpleStringProperty
+    -final isComplete: SimpleStringProperty
+    -final INC: String {static}
     'methods
-    +Item(String, LocalDate):
+    +Item(String, String, String):
+    +Item(String, String):
     +Item(String):
-    +setComplete(boolean)
-    +isComplete(): boolean
+    +setIsComplete(boolean)
+    +getIsComplete(): String
     +setDescription(String)
     +getDescription(): String
-    +setDueDate(LocalDate)
-    +getDueDate(): LocalDate
+    +setDueDate(String)
+    +getDueDate(): String
     +toString(): String
 }
 
@@ -77,7 +61,6 @@ class ToDoList {
     +ToDoList()
     +getThingsToDo(): List<Item>
     +addToList(String, LocalDate)
-    +addToList(String)
     +getCompleteThingsToDo(): List<Item>
     +getIncompleteThingsToDo(): List<Item>
     +editItem(Item, String, LocalDate, boolean)
@@ -86,24 +69,21 @@ class ToDoList {
     +loadListFromFile(File)
     +saveListToFile(File)
     +toString(): String
+    -addItemWithDescAndDate(String, String)
+    -addItemOnlyDesc(String description)
+    -validateDescriptionLength(String): boolean
 }
 
 class ToDoListFileConverter {
     'methods
-    +loadListFromFile(File): ToDoList
+    +loadListFromFile(File): List<Item>
     +saveListToFile(String, File)
+    -csvParser(String): String[]
 }
 
-class ItemValidator {
-    'methods
-    +validateDescriptionLength(String): boolean
-    +validateDate(String): boolean
-}
 
 ToDoListApplication -- ApplicationController
 ApplicationController -- ToDoList
 ToDoList --o ToDoListFileConverter
 ToDoList -- Item
-Item --o ItemValidator
-ToDoList --o ItemValidator
 @enduml

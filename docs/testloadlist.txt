@@ -1,0 +1,3 @@
+hello,2024-05-20,Incomplete
+goodbye,,Complete
+hola,2021-09-18,Incomplete
