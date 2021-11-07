@@ -2,6 +2,8 @@
  *  UCF COP3330 Fall 2021 Application Assignment 1 Solution
  *  Copyright 2021 Miguel Rosario
  */
+// Credit for UploadArrow and DownloadArrow images:
+// Icons made by https://www.flaticon.com/authors/uniconlabs from https://www.flaticon.com.
 package baseline;
 
 import javafx.collections.FXCollections;
@@ -15,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -64,6 +67,12 @@ public class ApplicationController implements Initializable {
     private Label editItemCountLabel;
 
     @FXML
+    private CheckBox dateClearCheckbox;
+
+    @FXML
+    private Label editInputErrorLabel;
+
+    @FXML
     private void onAddItemPressed(ActionEvent event) {
         int listSizeBeforeAdd = masterList.getThingsToDo().size();
         masterList.addToList(newDescriptionBox.getText(),newDateBox.getValue());
@@ -96,15 +105,41 @@ public class ApplicationController implements Initializable {
     private void onEditItemPressed(ActionEvent event) {
         // Get the currently selected item from the tableview.
         Item itemToChange = listTable.getSelectionModel().getSelectedItem();
-        // Call the masterList's editItem function.
-        masterList.editItem(itemToChange, editDescriptionBox.getText(), editDateBox.getValue(),
-                completeCheckbox.isSelected());
-        // Reset values for the boxes.
+        if(editDescriptionBox.getText().length() < 257 && dateClearCheckbox.isSelected()) {
+            // If the description is not too long and the user chooses to clear the date.
+            masterList.editItem(itemToChange, editDescriptionBox.getText(), null,
+                    completeCheckbox.isSelected());
+            // Reset values for the boxes.
+            resetEditSide();
+        } else if(editDescriptionBox.getText().length() < 257 && !dateClearCheckbox.isSelected()) {
+            // Else if the description is not too long and the user chooses NOT to clear the date.
+            if(editDateBox.getValue() == null && !itemToChange.getDueDate().equals("")) {
+                // If there was no input in the date, keep the date the same.
+                masterList.editItem(itemToChange, editDescriptionBox.getText(),
+                        LocalDate.parse(itemToChange.getDueDate()),
+                        completeCheckbox.isSelected());
+            } else {
+                // Otherwise update the date along with everything else.
+                masterList.editItem(itemToChange, editDescriptionBox.getText(), editDateBox.getValue(),
+                        completeCheckbox.isSelected());
+            }
+            // Reset values for the boxes.
+            resetEditSide();
+        } else {
+            editInputErrorLabel.setVisible(true);
+        }
+        // Update the visibleList and tableview.
+        updateTable();
+    }
+
+    @FXML
+    private void resetEditSide() {
+        // Reset values for the boxes on the edit side.
         editDateBox.setValue(null);
         editDescriptionBox.setText("");
         completeCheckbox.setSelected(false);
-        // Update the visibleList and tableview.
-        updateTable();
+        dateClearCheckbox.setSelected(false);
+        editInputErrorLabel.setVisible(false);
     }
 
     @FXML

@@ -21,6 +21,10 @@ class ApplicationController {
     -editDescriptionBox: TextArea
     -editDateBox: DatePicker
     -completeCheckbox: CheckBox
+    -addItemCountLabel: Label
+    -editItemCountLabel: Label
+    -dateClearCheckbox: CheckBox
+    -editInputErrorLabel: Label
     'methods
     -onAddItemPressed(ActionEvent)
     -onDeleteItemPressed(ActionEvent)
@@ -28,6 +32,7 @@ class ApplicationController {
     -onDisplayCompletePressed(ActionEvent)
     -onDisplayIncompletePressed(ActionEvent)
     -onEditItemPressed(ActionEvent)
+    -resetEditSide()
     -onClearListPressed(ActionEvent)
     -onDownloadListPressed(ActionEvent)
     -onUploadListPressed(ActionEvent)

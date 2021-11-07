@@ -2,6 +2,8 @@
  *  UCF COP3330 Fall 2021 Application Assignment 1 Solution
  *  Copyright 2021 Miguel Rosario
  */
+// Credit for UploadArrow and DownloadArrow images:
+// Icons made by https://www.flaticon.com/authors/uniconlabs from https://www.flaticon.com.
 package baseline;
 
 import javafx.fxml.FXMLLoader;
