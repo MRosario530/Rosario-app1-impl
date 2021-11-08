@@ -19,7 +19,7 @@ public class ToDoListApplication extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainMenuScene.fxml")));
-        Scene scene = new Scene(root, 1158, 658);
+        Scene scene = new Scene(root, 1158, 667);
         stage.setTitle("To Do List Application");
         stage.setScene(scene);
         stage.show();
